@@ -1,0 +1,235 @@
+﻿﻿<div class="container my-4">
+    <h1 class="text-center">Bienvenido a Ventas</h1>
+
+    <div class="row">
+        <div class="col-12 mb-3">
+            <form method="get" action="@Url.Action("Index", "Ventas")">
+                <div class="input-group">
+                    <!-- Barra de búsqueda -->
+                    <input type="text" class="form-control" name="search" placeholder="Buscar..." id="searchInput" />
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+                <!-- Filtro de búsqueda -->
+                <div class="input-group-append">
+                    Filtros:
+                    <div class="btn-group">
+                        <input type="radio" name="filter" id="filterNombre" value="nombre" checked>
+                        <label for="filterNombre"> Nombre</label>
+                        <input type="radio" name="filter" id="filterCodigo" value="codigo">
+                        <label for="filterCodigo"> Código</label>
+                        <input type="radio" name="filter" id="filterPrecio" value="precio">
+                        <label for="filterPrecio"> Precio</label>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Formulario de Cliente y NIT (debajo de la barra de búsqueda y encima del carrito) -->
+    <div class="row mt-3">
+        <div class="col-12 text-end">
+            <h4>Información del Cliente</h4>
+            <form id="formularioFinalizarCompra" method="post" action="@Url.Action("CrearVenta", "Ventas")">
+                <input type="hidden" id="productoIds" name="productoIds" />
+                <input type="hidden" id="cantidades" name="cantidades" />
+                <input type="hidden" id="empleadoId" name="empleadoId" value="1" />
+                <div class="mb-3">
+                    <label for="cliente" class="form-label">Seleccione al Cliente</label>
+                    <select class="form-select" id="cliente" name="clienteId" required>
+                        <option value="">Seleccione ...</option>
+                        <option value="CF">Consumidor Final (CF)</option>
+                        @foreach (var cliente in ViewBag.Clientes as List<POS.Models.Cliente>)
+                        {
+                            <option value="@cliente.Id">@cliente.Nombre</option>
+                        }
+                    </select>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Grilla de productos -->
+        <div class="col-8">
+            <h4>Productos</h4>
+            <div class="row" id="grillaProductos">
+                @foreach (var producto in Model)
+                {
+                    <div class="col-6 col-md-4 mb-3">
+                        <div class="card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                            <img src="@producto.UrlImagen" class="card-img-top" style="height: 80px; object-fit: contain;" alt="@producto.Nombre">
+                            <div class="card-body p-2">
+                                <h6 class="card-title text-truncate" title="@producto.Nombre">@producto.Nombre</h6>
+                                <p class="card-text mb-1" style="font-size: 0.9em;">Q.@producto.Precio</p>
+                                <p class="card-text mb-1" style="font-size: 0.8em; color: gray;">Stock: @producto.Stock</p>
+                                <button class="btn btn-success btn-sm w-100 add-to-cart"
+                                        data-id="@producto.Id"
+                                        data-nombre="@producto.Nombre"
+                                        data-precio="@producto.Precio"
+                                        data-stock="@producto.Stock">
+                                    <i class="bi bi-cart-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Carrito -->
+        <div class="col-4">
+            <h4>Tus Productos</h4>
+            <div class="list-group" id="cart"></div>
+            <div class="mt-3">
+                <h5>Total: <span id="total">Q.0.00</span></h5>
+                <button class="btn btn-primary w-100" id="botonFinalizarCompra">
+                    <i class="bi bi-cash"></i> Finalizar Compra
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let carrito = [];
+    const contenedorCarrito = document.getElementById('cart');
+    const elementoTotal = document.getElementById('total');
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+
+    function actualizarCarrito() {
+        contenedorCarrito.innerHTML = '';
+        let total = 0;
+
+        carrito.forEach((item) => {
+            const nuevoElemento = document.createElement('div');
+            nuevoElemento.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+            nuevoElemento.innerHTML = `
+                ${item.nombre}
+                <span class="badge rounded-pill">
+                    ${item.cantidad} x Q.${item.precio.toFixed(2)} = Q.${(item.cantidad * item.precio).toFixed(2)}
+                </span>
+                <div>
+                    <button class="btn btn-sm btn-secondary decrement-item" data-id="${item.id}">
+                        <i class="bi bi-dash-circle"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger remove-item" data-id="${item.id}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `;
+            contenedorCarrito.appendChild(nuevoElemento);
+            total += item.cantidad * item.precio; // Sumar al total
+        });
+
+        elementoTotal.textContent = `Q.${total.toFixed(2)}`; // Actualizar el total en el HTML
+    }
+
+    document.getElementById('grillaProductos').addEventListener('click', function (e) {
+        if (e.target.closest('.add-to-cart')) {
+            const button = e.target.closest('.add-to-cart');
+            const id = button.getAttribute('data-id');
+            const nombre = button.getAttribute('data-nombre');
+            const precio = parseFloat(button.getAttribute('data-precio'));
+            const stock = parseInt(button.getAttribute('data-stock'));
+
+            const productoEnCarrito = carrito.find(item => item.id === id);
+
+            if (productoEnCarrito) {
+                if (productoEnCarrito.cantidad < stock) {
+                    productoEnCarrito.cantidad++;
+                }
+                else {
+                    alert('No hay suficiente stock');
+                    return;
+                }
+            } else {
+                if (stock > 0) {
+                    carrito.push({ id, nombre, precio, cantidad: 1 });
+                } else {
+                    alert('Este producto no está disponible');
+                    return;
+                }
+            }
+            actualizarCarrito();
+        }
+    });
+
+    // Decrementar o eliminar un artículo del carrito
+    document.getElementById('cart').addEventListener('click', function (e) {
+        if (e.target.closest('.decrement-item')) {
+            const button = e.target.closest('.decrement-item');
+            const id = button.getAttribute('data-id');
+            const item = carrito.find(item => item.id === id);
+
+            if (item.cantidad > 1) {
+                item.cantidad--;
+            } else {
+                carrito = carrito.filter(item => item.id != id);
+            }
+
+            actualizarCarrito();
+        }
+
+        if (e.target.closest('.remove-item')) {
+            const button = e.target.closest('.remove-item');
+            const id = button.getAttribute('data-id');
+            carrito = carrito.filter(item => item.id != id);
+            actualizarCarrito();
+        }
+    });
+
+            document.getElementById('botonFinalizarCompra').addEventListener('click', async () => {
+        const clienteId = document.getElementById('cliente').value;
+
+        if (!clienteId) {
+            alert('Seleccione un cliente');
+            return;
+        }
+
+        const venta = {
+            clienteId,
+            detalles: carrito.map(item => ({
+                productoId: parseInt(item.id),
+                cantidad: item.cantidad,
+                precioUnitario: item.precio
+            }))
+        };
+
+        console.log("Venta a enviar:", venta);
+
+        try {
+            const response = await fetch('/Ventas/CrearVenta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(venta)
+            });
+
+            if (response.ok) {
+                const responseJson = await response.json();
+                alert('Venta finalizada con éxito. Código de venta: ' + responseJson.ventaId);
+
+                carrito = [];
+                localStorage.removeItem('carrito'); 
+
+                window.location.href = `/Ventas/ImprimirFactura/${responseJson.ventaId}`;
+
+                setTimeout(() => location.reload(), 3000); 
+            } else {
+                alert('Error al finalizar la compra.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al finalizar la compra.');
+        }
+    });
+
+
+
+
+</script>

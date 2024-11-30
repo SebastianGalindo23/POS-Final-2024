@@ -1,0 +1,36 @@
+﻿@model IEnumerable<POS.Models.Empleado>
+
+<h2>Lista de Empleados</h2>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Agregar Nuevo Empleado</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DPI</th>
+            <th>Cargo</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.Apellido</td>
+                <td>@item.DPI</td>
+                <td>@item.Cargo</td>
+                <td>@item.Usuario</td>
+                <td>@item.Rol</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

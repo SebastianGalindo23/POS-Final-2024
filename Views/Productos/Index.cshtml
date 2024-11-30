@@ -1,0 +1,40 @@
+﻿@model IEnumerable<POS.Models.Producto>
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<div class="container mt-5">
+    <h2 class="text-primary">Gestión de Productos</h2>
+    <a href="/Productos/Create" class="btn btn-success mb-3">Agregar Nuevo Producto</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Fotografía</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var producto in Model)
+            {
+                <tr>
+                    <td>@producto.Codigo</td>
+                    <td>@producto.Nombre</td>
+                    <td>@producto.Descripcion</td>
+                    <td>@producto.Precio</td>
+                    <td>@producto.Stock</td>
+                    <td><img src="@producto.UrlImagen" alt="Imagen" width="50" /></td>
+                    <td>
+                        <a href="/Productos/Edit/@producto.Id" class="btn btn-primary btn-sm">Editar</a>
+                        <a href="/Productos/Delete/@producto.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

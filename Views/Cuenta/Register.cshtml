@@ -1,0 +1,65 @@
+﻿@model POS.Models.EmpleadoRegisterModel
+
+<div class="d-flex justify-content-center align-items-center vh-100" style="background-color: #ffffff; padding-top: 60px;">
+    <div class="card shadow" style="width: 550px; border-radius: 15px;">
+        <div class="card-body">
+            <h2 class="text-center mb-4">Registrarse</h2>
+            <form asp-action="Register" method="post">
+                <div class="form-group mb-3">
+                    <label asp-for="Nombre" class="form-label">Nombre</label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Apellido" class="form-label">Apellido</label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="DPI" class="form-label">DPI</label>
+                    <input asp-for="DPI" class="form-control" />
+                    <span asp-validation-for="DPI" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Cargo" class="form-label">Cargo</label>
+                    <input asp-for="Cargo" class="form-control" />
+                    <span asp-validation-for="Cargo" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Usuario" class="form-label">Usuario</label>
+                    <input asp-for="Usuario" class="form-control" />
+                    <span asp-validation-for="Usuario" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Contrasena" class="form-label">Contraseña</label>
+                    <input asp-for="Contrasena" class="form-control" type="password" />
+                    <span asp-validation-for="Contrasena" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ConfirmarContrasena" class="form-label">Confirmar Contraseña</label>
+                    <input asp-for="ConfirmarContrasena" class="form-control" type="password" />
+                    <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Rol" class="form-label">Rol</label>
+                    <select asp-for="Rol" class="form-control">
+                        <option value="Admin">Admin</option>
+                        <option value="Empleado">Empleado</option>
+                    </select>
+                    <span asp-validation-for="Rol" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-3" style="border-radius: 50px;">Registrarse</button>     
+            </form>
+            <div class="text-center mt-3">
+                <p>
+                    ¿Ya tiene cuenta?
+                    <a asp-action="Login" class="text-primary" style="text-decoration: none;">Iniciar sesión</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

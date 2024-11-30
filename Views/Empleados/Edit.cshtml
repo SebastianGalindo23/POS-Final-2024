@@ -1,0 +1,37 @@
+﻿@model POS.Models.Empleado
+
+<h2>Editar Empleado</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Apellido"></label>
+        <input asp-for="Apellido" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="DPI"></label>
+        <input asp-for="DPI" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Cargo"></label>
+        <input asp-for="Cargo" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Usuario"></label>
+        <input asp-for="Usuario" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Contrasena"></label>
+        <input asp-for="Contrasena" type="password" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Rol"></label>
+        <select asp-for="Rol" class="form-control" asp-items="ViewBag.Roles"></select>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

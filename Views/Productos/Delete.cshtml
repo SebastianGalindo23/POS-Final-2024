@@ -1,0 +1,15 @@
+﻿@model POS.Models.Producto
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<div class="container mt-5">
+    <h2 class="text-danger">Eliminar Producto</h2>
+    <p>¿Estás seguro que deseas eliminar el producto <strong>@Model.Nombre</strong>?</p>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="/Productos" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

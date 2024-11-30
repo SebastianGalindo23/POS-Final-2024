@@ -1,0 +1,16 @@
+﻿@{
+    string controllerName = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    if (controllerName.Equals("Cuenta", StringComparison.OrdinalIgnoreCase))
+    {
+        Layout = "_LoginLayout";
+    }
+    else if (controllerName.Equals("Ventas", StringComparison.OrdinalIgnoreCase))
+    {
+        Layout = "_VentasLayout";
+    }
+    else
+    {
+        Layout = "_AdminLayout";
+    }
+}
