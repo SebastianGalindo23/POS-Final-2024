@@ -30,7 +30,7 @@ namespace POS.Controllers
         {
             var productos = _context.Productos.AsQueryable();
 
-            // Filtrar por el tipo de búsqueda
+            
             if (!string.IsNullOrEmpty(search) && !string.IsNullOrEmpty(filter))
             {
                 switch (filter.ToLower())
@@ -75,7 +75,7 @@ namespace POS.Controllers
                 return NotFound();
             }
 
-            // Obtener el nombre del empleado desde los Claims
+            
             var empleadoNombre = User.Identity.IsAuthenticated
                 ? User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value
                 : "Empleado desconocido";
@@ -126,10 +126,10 @@ namespace POS.Controllers
                         {
                             table.ColumnsDefinition(columns =>
                             {
-                                columns.RelativeColumn(2); // Producto
-                                columns.RelativeColumn(1); // Cantidad
-                                columns.RelativeColumn(1); // Precio Unitario
-                                columns.RelativeColumn(1); // Subtotal
+                                columns.RelativeColumn(2);
+                                columns.RelativeColumn(1); 
+                                columns.RelativeColumn(1); 
+                                columns.RelativeColumn(1); 
                             });
 
                             // Encabezados
@@ -157,17 +157,17 @@ namespace POS.Controllers
                             // Estilos de celdas
                             static IContainer EstiloCelda(IContainer container)
                             {
-                                return container.Background("#e8e8e8").Padding(5).Border(1).BorderColor("#c0c0c0").AlignCenter();
+                                return container.Background("#e8e8e8").Padding(5).Border(1).BorderColor("#007BFF").AlignCenter();
                             }
 
                             static IContainer EstiloCeldaContenido(IContainer container)
                             {
-                                return container.Padding(5).Border(1).BorderColor("#e0e0e0");
+                                return container.Padding(5).Border(1).BorderColor("#007BFF");
                             }
 
                             static IContainer EstiloCeldaTotal(IContainer container)
                             {
-                                return container.Background("#f5f5f5").Padding(5).Border(1).BorderColor("#c0c0c0");
+                                return container.Background("#f5f5f5").Padding(5).Border(1).BorderColor("#007BFF");
                             }
                         });
 
@@ -192,9 +192,6 @@ namespace POS.Controllers
 
             return File(stream, "application/pdf", $"Factura_{id}.pdf");
         }
-
-
-
 
         // Verificar si una venta existe
         private bool VentaExists(int id)
